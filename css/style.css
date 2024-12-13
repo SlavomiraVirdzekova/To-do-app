@@ -1,0 +1,109 @@
+* {
+	margin: 0 auto;
+	padding: 0;
+	padding-top: 10px;
+	box-sizing: border-box;	
+
+}
+
+body {
+	/*background: rgba(255, 187, 30, 1.0);*/
+	background: linear-gradient(45deg, rgba(255, 187, 30, 1.0), rgba(255, 96, 223, 1.0)) no-repeat;
+	background-size: contain;
+	width: 80%;
+	font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	text-align: center;
+}
+
+button{
+	border-radius: 10px;
+	background-color: rgba(255, 236, 214, 0.562);
+	padding: 10px 15px;
+	&:hover{
+		color:azure;
+		cursor: pointer;	
+		box-shadow: 1px 5px 30px 5px rgba(253, 15, 15, 0.65) inset;		
+	}	
+}
+
+.new-task {
+	margin: 2rem;	
+}
+
+.task-form{
+	max-width: 80%;
+	padding: 1.5rem;
+	background-color: rgba(255, 236, 214, 0.562);
+	border-radius: 6px;
+	select, input{
+		margin: .5rem;
+		text-align: left;
+		padding: 0.3rem;		
+	}
+	textarea{
+		width: 100%;
+		display: block;
+		margin: 0.1rem;
+		border-radius: 6px;
+		padding:1rem;
+	}
+	button{
+		display: block;
+		margin-top: 1rem;
+	}	
+}
+
+form .visible {	
+	display: visible;
+}
+
+form .hide {
+	display: none;
+}
+
+.items{
+	display:flex;
+	gap: 1rem;
+}
+
+.task-box{
+	background: rgba(255, 241, 230, 0.87);
+	padding: 0;
+	padding-bottom: .4rem;
+	margin: 0;
+	width: 15%;
+	border: 3px dotted rgb(238, 161, 130);
+	.task-head{
+		padding: 0;
+		display: flex;
+		justify-content: space-between;
+	}
+	
+	span{
+		padding: 0;
+		margin: 0.2rem;
+		color: rgb(255, 153, 0);		
+		font-size: .9rem; 	
+	}
+	p{
+		padding: .4rem ;
+		padding-top:0;
+		width: 100%;
+		text-align: left;
+		vertical-align:center;
+		font-style: italic;		
+	}
+	
+}
+
+footer>h1{
+	font-family:sans-serif;
+	font-style:italic;
+	font-weight: 100;
+	font-size: 2rem;
+	padding: 5rem;
+	text-align: right;
+}
+
+
+
