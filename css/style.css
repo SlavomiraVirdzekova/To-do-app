@@ -63,6 +63,7 @@ button{
 	display:flex;
 	gap: 1rem;
 	justify-content: flex-start;
+	flex-wrap: wrap;
 }
 
 .task-box{
@@ -70,7 +71,7 @@ button{
 	padding: 0;
 	padding-bottom: .4rem;
 	margin: 0;
-	width: 30%;
+	min-width: 15%;
 	border: 3px dotted rgb(238, 161, 130);
 	.task-head{
 		padding: 0;

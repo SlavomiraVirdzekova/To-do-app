@@ -68,24 +68,47 @@ if(array_key_exists("add", $_POST)){
 		</form>	
 	<section class="do-it-list">		
 		<div class="today items">
-			<h1>Dnes Vás čekají tyto úkoly</h1>
+			<h1>Dnes Vás čekají tyto úkoly:</h1>
+			
+			<div class="items">
 			<?php 
 				$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly WHERE termin = CURRENT_DATE()");
 				$dotaz->execute();
 				$seznamDnesnichUkolu = $dotaz->fetchAll();
-				var_dump($seznamDnesnichUkolu);
+				
+				foreach($seznamDnesnichUkolu as $polozka){ ?>					
+						<div class="task-box">
+							<div class="task-head">
+								<span class="date"><?php echo $polozka['termin'];?></span>
+								<span class="category"><?php echo $polozka['kategorie'];?></span>
+							</div>
+							<p class="task"><?php echo $polozka['ukol'];?></p>
+							<input type="checkbox" class="checkbox">
+						</div>
+				<?php }
 			?>
+			</div>
 		</div>
-		<div class="items">	
-			<div class="task-box">
-				<div class="task-head">			
-					<span class="date"></span>
-					<span class="category">Rodina</span>
-				</div>
-				<p class="task">Upéct perníčky s miminkem Diankou a pak to všechno uklidit</p>
-				<input type="checkbox" class="checkbox">
+		<div clas="dalsi-ukoly">
+			<div class="items">	
+				<?php
+					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly ORDER BY termin");
+					$dotaz->execute();
+					$seznamVsechUkolu = $dotaz->fetchAll();
+
+					foreach($seznamVsechUkolu as $polozka){ ?>
+						<div class="task-box">
+							<div class="task-head">	
+								<span class="date"> <?php echo $polozka['termin']; ?> </span>
+								<span class="category"><?php echo $polozka['kategorie']; ?></span>
+							</div>
+							<p class="task"><?php echo $polozka['ukol']; ?></p>
+							<input type="checkbox" class="checkbox">
+					</div>	
+					<?php }
+				?>
 			</div>	
-		</div>	
+		</div>
 	</section>
 	</main>
 
