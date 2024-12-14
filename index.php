@@ -17,6 +17,9 @@ if(array_key_exists("add", $_POST)){
 	$dotaz = $db->prepare("INSERT INTO ukoly SET ukol = ?, termin = ?, kategorie = ?, důležitost = ?, stav = false");
 	$dotaz->execute([$ukol, $termin, $kategorie, $dulezitost]);
 	$idUkolu = $db->lastInsertId();
+
+	header("Location: " . $_SERVER['PHP_SELF']);
+	exit();
 }
 
 ?>
