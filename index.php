@@ -15,9 +15,8 @@
 	<header>
 </header>
 	<main>
-	<button class="new-task" name="new">Nový úkol + </button>
-	<section>
-		<form method="post" class="task-form hide">
+	<button class="new-task">Nový úkol + </button>
+		<form method="post" class="task-form hide">		
 			<label for="task">Úkol:</label>
 			<textarea name="task" rows="4"></textarea>
 
@@ -40,24 +39,10 @@
 			<label for="term">Termín:</label>
 			<input type="date">
 			<button type="submit" name="add">Přidat</button>
-		</form>
-	</section>	
-
+		</form>	
 	<section class="do-it-list">		
 		<div class="today items">
-			<?php
-				$todayDate = Date("j.m.Y");
-
-				//if ($taskTerm == $todayDate){
-				//	echo "Dnes máte termín k těmto úkolům";
-				//}
-				//else {
-				//	echo "Dnes Vás nečekají žádné úkoly, užívejte si volna, nebo pracujte na pzdějších";
-				//}
-				//echo $todayDate;
-			?>
-		</div>
-			
+		
 		<div class="items">	
 			<div class="task-box">
 				<div class="task-head">			
@@ -77,15 +62,9 @@
 </body>
 
 <script>
-	const addTask = document.querySelector(".add");
-	const formular = document.querySelector(".add-new-task");
-
-	$( function(){
-		$(addTask).on("click", function(){
-			$(".visible").switchClass("visible", "hide", 1000);
-			$(".hide").switchClass("hide", "visible", 1000);			
+		$(".new-task").click(function(){
+			$("form").removeClass("hide");			
 		});
-	});
 	
 </script>
 </html>
