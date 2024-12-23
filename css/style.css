@@ -58,11 +58,17 @@ button{
 	display: none;
 }
 
+.do-it-list>h1 {
+	width: 100%;
+	display: block;
+}
+
 .items{
+	width: 100%;
 	margin: 0;
 	display:flex;
 	gap: 1rem;
-	justify-content: flex-start;
+	justify-content: center;
 	flex-wrap: wrap;
 }
 
@@ -71,17 +77,19 @@ button{
 	padding: 0;
 	padding-bottom: .4rem;
 	margin: 0;
-	min-width: 15%;
+	width: 17%;
+	text-wrap: wrap;
 	border: 3px dotted rgb(238, 161, 130);
 	.task-head{
 		padding: 0;
+		margin-bottom: .5rem;
 		display: flex;
 		justify-content: space-between;
 	}
 	
 	span{
 		padding: 0;
-		margin: 0.2rem;
+		margin: 0rem;
 		color: rgb(255, 153, 0);		
 		font-size: .9rem; 	
 	}
@@ -89,20 +97,15 @@ button{
 		padding: .4rem ;
 		padding-top:0;
 		width: 100%;
-		text-align: left;
-		vertical-align:center;
+		text-align: center;
 		font-style: italic;		
 	}
-	
-}
 
-footer>h1{
-	font-family:sans-serif;
-	font-style:italic;
-	font-weight: 100;
-	font-size: 2rem;
-	padding: 5rem;
-	text-align: right;
+	.checkbox{
+		position: relative;
+		padding-bottom: 0;
+	}
+	
 }
 
 

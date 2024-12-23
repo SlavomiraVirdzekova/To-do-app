@@ -5,6 +5,6 @@ CREATE TABLE ukoly (
 	ukol text,
 	termin date,
 	kategorie text,
-	důležitost int,
+	dulezitost int,
 	stav boolean
 );
