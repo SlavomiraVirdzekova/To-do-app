@@ -18,12 +18,24 @@ body {
 button{
 	border-radius: 10px;
 	background-color: rgba(255, 236, 214, 0.562);
-	padding: 10px 15px;
+	padding: 1rem;
+	text-align: center;
 	&:hover{
 		color:azure;
 		cursor: pointer;	
 		box-shadow: 1px 5px 30px 5px rgba(253, 15, 15, 0.65) inset;		
 	}	
+}
+
+i{
+	padding: 0;
+}
+
+section{
+	margin-bottom: 40px;
+	h1{
+		margin: 20px;
+	}
 }
 
 .new-task {
@@ -51,16 +63,13 @@ button{
 	button{
 		display: block;
 		margin-top: 1rem;
+		text-align: center;
+		
 	}	
 }
 
 .task-form.hide {
 	display: none;
-}
-
-.do-it-list>h1 {
-	width: 100%;
-	display: block;
 }
 
 .items{
@@ -75,13 +84,16 @@ button{
 .task-box{
 	background: rgba(255, 241, 230, 0.87);
 	padding: 0;
-	padding-bottom: .4rem;
 	margin: 0;
-	width: 17%;
+	width: 15%;
 	text-wrap: wrap;
 	border: 3px dotted rgb(238, 161, 130);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	.task-head{
 		padding: 0;
+		margin: 0;
 		margin-bottom: .5rem;
 		display: flex;
 		justify-content: space-between;
@@ -100,11 +112,21 @@ button{
 		text-align: center;
 		font-style: italic;		
 	}
-
-	.checkbox{
-		position: relative;
-		padding-bottom: 0;
+	.task-bottom{
+		display: flex;
+		justify-content: space-between;
+		margin: 0.2rem;
+		button{
+			margin: 0;
+			padding: 0.3rem;
+			border-radius: 0;
+			border: 0;
+		}
+		.checkbox{
+			margin: .3rem;
+		}
 	}
+
 	
 }
 

@@ -14,7 +14,7 @@ if(array_key_exists("add", $_POST)){
 	$kategorie = $_POST["category"];
 	$dulezitost = $_POST["dulezitost"];
 
-	$dotaz = $db->prepare("INSERT INTO ukoly SET ukol = ?, termin = ?, kategorie = ?, dulezitost = ?, stav = false");
+	$dotaz = $db->prepare("INSERT INTO ukoly SET ukol = ?, termin = ?, kategorie = ?, důležitost = ?, stav = false");
 	$dotaz->execute([$ukol, $termin, $kategorie, $dulezitost]);
 	$idUkolu = $db->lastInsertId();
 
@@ -26,16 +26,6 @@ if(array_key_exists("add", $_POST)){
 	var_dump($dulezitost);
 }
 
-if (array_key_exists("delete", $_GET)){
-	$dotaz = $db->prepare("DELETE FROM id, ukol, termin, kategorie, dulezitost, stav FROM ukoly");
-	$dotaz->execute();
-	$seznamDnesnichUkolu = $dotaz->fetch();
-	$seznamVsechUkolu = $dotaz->fetch();
-	$seznamUkoluPoTerminu = $dotaz->fetch();
-
-	var_dump("delete");
-
-}
 
 ?>
 
@@ -81,10 +71,9 @@ if (array_key_exists("delete", $_GET)){
 			<label for="term">Termín:</label>
 			<input type="date" name="date">
 			<button type="submit" name="add">Přidat</button>
-		</form>	
-	<section class="do-it-list">	
+		</form>		
 			
-		<div class="today items">		
+		<section class="today items">		
 			
 			<?php 
 				$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly WHERE termin = CURRENT_DATE()");
@@ -92,7 +81,7 @@ if (array_key_exists("delete", $_GET)){
 				$seznamDnesnichUkolu = $dotaz->fetchAll();
 
 				if (count($seznamDnesnichUkolu) <= 0){
-					echo "<h1>Dnes máte volno</h1>";	
+					echo "<h1>Dnes máte volno</h1>";
 				}
 				else {
 					echo "<h1>Dnes Vás čekají tyto úkoly:</h1>";
@@ -104,10 +93,10 @@ if (array_key_exists("delete", $_GET)){
 					}  
 				}
 			?>
-			</div>
-		</div>
+		</section>
+		
 		<h1>Úkoly po termínu:</h1>
-		<div class="after-term">
+		<section class="after-term">
 			<div class="items">
 				<?php
 					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly WHERE termin < CURRENT_DATE()");
@@ -120,16 +109,16 @@ if (array_key_exists("delete", $_GET)){
 
 					else{
 
-						foreach($seznamUkoluPoTerminu as $ukol){ 
+						foreach($seznamUkoluPoTerminu as $polozka){ 
 							include 'vypsaniUkolu.php';				
 						} 
 					}
 				?>
 			</div>
-		</div>
+		</section>
 
 		<h1>Další úkoly:</h1>
-		<div clas="dalsi-ukoly">
+		<section clas="dalsi-ukoly">
 			<div class="items">	
 				<?php
 					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly  WHERE termin > CURRENT_DATE() ORDER BY termin");
@@ -141,8 +130,8 @@ if (array_key_exists("delete", $_GET)){
 					}
 				?>
 			</div>	
-		</div>
-	</section>
+		</section>
+	
 	</main>
 </body>
 
@@ -153,10 +142,10 @@ if (array_key_exists("delete", $_GET)){
 
 		$(".checkbox").change(function() {
 			if (this.checked) {
-				$(this).parent().children(":nth-child(2)").css("text-decoration", "line-through");
+				$(this).parent().parent().children(":nth-child(2)").css("text-decoration", "line-through");
 			}
 			else {
-				$(this).parent().children(":nth-child(2)").css("text-decoration", "none");
+				$(this).parent().parent().children(":nth-child(2)").css("text-decoration", "none");
 			}
 		});
 	
