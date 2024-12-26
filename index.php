@@ -155,6 +155,14 @@ if (isset($_POST['delete'])){
 				$(this).parent().parent().children(":nth-child(2)").css("text-decoration", "none");
 			}
 		});
+
+		$(".delete-btn").click(function(event) {
+			let confirmation = confirm("Určitě chcete úkol smazat?");
+
+			if (!confirmation) {
+				event.preventDefault();
+			}
+		});
 	
 </script>
 </html>

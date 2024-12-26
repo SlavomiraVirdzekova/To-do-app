@@ -7,8 +7,8 @@
 		<p class="task"><?php echo $polozka['ukol'];?></p>
 		<div class="task-bottom">
 			<input type="checkbox" class="checkbox">
-			<form method="post">
-				<button type="submit" name="delete" value="<?php echo $polozka['id'];?>" id="delete"> 
+			<form method="post" class="delete-form">
+				<button type="submit" name="delete" value="<?php echo $polozka['id'];?>" class="delete-btn"> 
 					<i class="fa-solid fa-xmark"></i>
 				</button>
 			</form>

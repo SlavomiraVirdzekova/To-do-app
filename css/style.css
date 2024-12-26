@@ -117,17 +117,19 @@ section{
 		display: flex;
 		justify-content: space-between;
 		margin: 0.2rem;
-		button{
-			margin: 0;
-			padding: 0.3rem;
-			border-radius: 0;
-			border: 0;
-		}
 		.checkbox{
 			margin: .3rem;
 		}
+		.delete-form{
+			display: inline;
+			button{
+				margin: 0;
+				padding: 0.3rem;
+				border-radius: 0;
+				border: 0;
+			}
+		}
 	}
-
 	
 }
 
