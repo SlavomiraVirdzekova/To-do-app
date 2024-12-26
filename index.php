@@ -22,10 +22,17 @@ if(array_key_exists("add", $_POST)){
 
 	header("Location: " . $_SERVER['PHP_SELF']);
 	exit();
-	
-	var_dump($dulezitost);
 }
 
+if (isset($_POST['delete'])){
+	$idUkolu = $_POST['delete'];
+
+	$dotaz = $db->prepare("DELETE FROM ukoly WHERE id = ?");
+	$dotaz->execute([$idUkolu]);
+
+	header("Location: " . $_SERVER['PHP_SELF']);
+	exit();
+}
 
 ?>
 
@@ -99,7 +106,7 @@ if(array_key_exists("add", $_POST)){
 		<section class="after-term">
 			<div class="items">
 				<?php
-					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly WHERE termin < CURRENT_DATE()");
+					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly WHERE termin < CURRENT_DATE() ORDER BY důležitost");
 					$dotaz->execute();
 					$seznamUkoluPoTerminu = $dotaz->fetchAll();
 
