@@ -10,15 +10,13 @@ $db = new PDO(
 
 if(array_key_exists("add", $_POST)){
 	$ukol = $_POST["task"];	
-	$termin = $_POST["date"];
+	$termin = $_POST["date"];	
 	$kategorie = $_POST["category"];
 	$dulezitost = $_POST["dulezitost"];
 
 	$dotaz = $db->prepare("INSERT INTO ukoly SET ukol = ?, termin = ?, kategorie = ?, důležitost = ?, stav = false");
 	$dotaz->execute([$ukol, $termin, $kategorie, $dulezitost]);
-	$idUkolu = $db->lastInsertId();
-
-	
+	$idUkolu = $db->lastInsertId();		
 
 	header("Location: " . $_SERVER['PHP_SELF']);
 	exit();
@@ -80,18 +78,17 @@ if (isset($_POST['delete'])){
 			<button type="submit" name="add">Přidat</button>
 		</form>		
 			
-		<section class="today items">		
-			
+		<section class="today-items">		
+		<h1>Dnešní úkoly:</h1>	
 			<?php 
 				$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly WHERE termin = CURRENT_DATE()");
 				$dotaz->execute();
 				$seznamDnesnichUkolu = $dotaz->fetchAll();
 
 				if (count($seznamDnesnichUkolu) <= 0){
-					echo "<h1>Dnes máte volno</h1>";
+					echo "<p>Dnes máš volno</p>";
 				}
 				else {
-					echo "<h1>Dnes Vás čekají tyto úkoly:</h1>";
 					echo "<div class='items'>";	
 					
 					foreach($seznamDnesnichUkolu as $polozka){ 
@@ -101,10 +98,9 @@ if (isset($_POST['delete'])){
 				}
 			?>
 		</section>
-		
-		<h1>Úkoly po termínu:</h1>
+
 		<section class="after-term">
-			<div class="items">
+		<h1>Úkoly po termínu:</h1>		
 				<?php
 					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly WHERE termin < CURRENT_DATE() ORDER BY důležitost");
 					$dotaz->execute();
@@ -115,7 +111,7 @@ if (isset($_POST['delete'])){
 					}
 
 					else{
-
+						echo "<div class='items'>";
 						foreach($seznamUkoluPoTerminu as $polozka){ 
 							include 'vypsaniUkolu.php';				
 						} 
@@ -124,8 +120,9 @@ if (isset($_POST['delete'])){
 			</div>
 		</section>
 
-		<h1>Další úkoly:</h1>
+		
 		<section clas="dalsi-ukoly">
+			<h1>Další úkoly:</h1>
 			<div class="items">	
 				<?php
 					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly  WHERE termin > CURRENT_DATE() ORDER BY termin");
