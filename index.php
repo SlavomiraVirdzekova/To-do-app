@@ -135,6 +135,30 @@ if (isset($_POST['delete'])){
 				?>
 			</div>	
 		</section>
+
+		<section class="dokoncene-ukoly">
+			<?php
+			$dokonceneUkoly = [];
+			function presunDoDokoncenych($seznamUkolu, $dokonceneUkoly){
+				foreach($seznamUkolu as $key => $ukol){
+					if (isset($_POST['checkbox_' . $ukol['id']]) && $_POST['checkbox_' . $ukol['id']] == 'on'){
+						$dokonceneUkoly[] = $ukol;
+
+						unset($seznamUkolu[$key]);
+					}
+				}
+			}
+
+			presunDoDokoncenych($seznamDnesnichUkolu, $dokonceneUkoly);
+			presunDoDokoncenych($seznamUkoluPoTerminu, $dokonceneUkoly);
+			presunDoDokoncenych($seznamVsechUkolu, $dokonceneUkoly);
+
+			echo "<pre>";
+			print_r($dokonceneUkoly);
+			echo "</pre>";
+
+			?>
+		</section>
 	
 	</main>
 </body>

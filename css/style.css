@@ -67,8 +67,7 @@ section{
 	button{
 		display: block;
 		margin-top: 1rem;
-		text-align: center;
-		
+		text-align: center;		
 	}	
 }
 
@@ -89,7 +88,10 @@ section{
 	background: rgba(255, 241, 230, 0.87);
 	padding: 0;
 	margin: 0;
-	width: 15%;
+	width: 100%;
+	max-width: 200px;
+	min-width: 100px;
+	height: auto;
 	text-wrap: wrap;
 	border: 3px dotted rgb(238, 161, 130);
 	display: flex;
