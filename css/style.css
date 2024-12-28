@@ -121,14 +121,18 @@ section{
 			margin: .3rem;
 		}
 		.delete-form{
-			display: inline;
-			button{
-				margin: 0;
-				padding: 0.3rem;
-				border-radius: 0;
-				border: 0;
-			}
+			margin:0;
+			padding-top: 0;
 		}
+	
+		button{
+			text-align: left;
+			margin: 0;
+			padding: 0.3rem;
+			border-radius: 0;
+			border: 0;
+		}
+		
 	}
 	
 }
