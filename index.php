@@ -149,10 +149,14 @@ if (isset($_POST['delete'])){
 
 		$(".checkbox").change(function() {
 			if (this.checked) {
-				$(this).parent().parent().children(":nth-child(2)").css("text-decoration", "line-through");
+				$(this).parent().parent().children(":nth-child(2)").css({"text-decoration": "line-through",
+					"color": "grey",
+				});
 			}
 			else {
-				$(this).parent().parent().children(":nth-child(2)").css("text-decoration", "none");
+				$(this).parent().parent().children(":nth-child(2)").css({"text-decoration": "none",
+					"color": "black",
+				});
 			}
 		});
 
