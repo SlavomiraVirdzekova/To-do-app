@@ -8,11 +8,14 @@ $db = new PDO(
 	),
 );
 
+
+
 if(array_key_exists("add", $_POST)){
 	$ukol = $_POST["task"];	
 	$termin = $_POST["date"];	
 	$kategorie = $_POST["category"];
 	$dulezitost = $_POST["dulezitost"];
+	$stav = $_POST["stav"];
 
 	$dotaz = $db->prepare("INSERT INTO ukoly SET ukol = ?, termin = ?, kategorie = ?, důležitost = ?, stav = false");
 	$dotaz->execute([$ukol, $termin, $kategorie, $dulezitost]);
@@ -20,6 +23,18 @@ if(array_key_exists("add", $_POST)){
 
 	header("Location: " . $_SERVER['PHP_SELF']);
 	exit();
+}
+
+if(isset($_POST['action']) && $_POST['action'] === 'update_status'){	
+	
+	var_dump($_POST);
+		exit();
+
+	$stav = isset($_POST['stav']) ? $_POST['stav'] : 0;
+	$taskId = $_POST['id'];
+
+	$dotaz = $db->prepare("UPDATE ukoly SET stav = ? WHERE id = ?");
+	$dotaz->execute([$stav, $taskId]);	
 }
 
 if (isset($_POST['delete'])){
@@ -54,7 +69,7 @@ if (isset($_POST['delete'])){
 	<main>
 	<button class="new-task">Nový úkol + </button>
 		<form method="post" class="task-form hide">		
-			<label for="task">Úkol:</label>
+			<label>Úkol:</label>
 			<textarea name="task" rows="4"></textarea>
 
 			<label for="category">Kategórie:</label>
@@ -72,6 +87,7 @@ if (isset($_POST['delete'])){
 				<option value="2" class="important">2</option>
 				<option value="3" class="less-important">3</option>
 			</select>
+			<input type="hidden" name="stav" value="0"></input>
 
 			<label for="term">Termín:</label>
 			<input type="date" name="date">
@@ -81,7 +97,7 @@ if (isset($_POST['delete'])){
 		<section class="today-items">		
 		<h1>Dnešní úkoly:</h1>	
 			<?php 
-				$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly WHERE termin = CURRENT_DATE()");
+				$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly WHERE termin = CURRENT_DATE()");
 				$dotaz->execute();
 				$seznamDnesnichUkolu = $dotaz->fetchAll();
 
@@ -102,7 +118,7 @@ if (isset($_POST['delete'])){
 		<section class="after-term">
 		<h1>Úkoly po termínu:</h1>		
 				<?php
-					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly WHERE termin < CURRENT_DATE() ORDER BY důležitost");
+					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly WHERE termin < CURRENT_DATE() ORDER BY důležitost");
 					$dotaz->execute();
 					$seznamUkoluPoTerminu = $dotaz->fetchAll();
 
@@ -125,7 +141,7 @@ if (isset($_POST['delete'])){
 			<h1>Další úkoly:</h1>
 			<div class="items">	
 				<?php
-					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie FROM ukoly  WHERE termin > CURRENT_DATE() ORDER BY termin");
+					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly  WHERE termin > CURRENT_DATE() ORDER BY termin");
 					$dotaz->execute();
 					$seznamVsechUkolu = $dotaz->fetchAll();
 
@@ -137,50 +153,91 @@ if (isset($_POST['delete'])){
 		</section>
 
 		<section class="dokoncene-ukoly">
+			<h1>Dokončeny úkoly:</h1>
+			<div class="items">
 			<?php
-			$dokonceneUkoly = [];
-			function presunDoDokoncenych($seznamUkolu, $dokonceneUkoly){
-				foreach($seznamUkolu as $key => $ukol){
-					if (isset($_POST['checkbox_' . $ukol['id']]) && $_POST['checkbox_' . $ukol['id']] == 'on'){
-						$dokonceneUkoly[] = $ukol;
+				$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly WHERE stav = true");
+				$dotaz->execute();
+				$seznamDokoncenych = $dotaz->fetchAll();
 
-						unset($seznamUkolu[$key]);
-					}
+				foreach($seznamDokoncenych as $polozka){
+					include 'vypsaniUkolu.php';
 				}
-			}
-
-			presunDoDokoncenych($seznamDnesnichUkolu, $dokonceneUkoly);
-			presunDoDokoncenych($seznamUkoluPoTerminu, $dokonceneUkoly);
-			presunDoDokoncenych($seznamVsechUkolu, $dokonceneUkoly);
-
-			echo "<pre>";
-			print_r($dokonceneUkoly);
-			echo "</pre>";
-
 			?>
+			</div>
 		</section>
 	
 	</main>
 </body>
 
 <script>
-		$(".new-task").click(function(){
-			$("form").removeClass("hide");			
-		});
+	$(".new-task").click(function(){
+		$("form").removeClass("hide");			
+	});
 
-		$(".checkbox").change(function() {
-			if (this.checked) {
-				$(this).parent().parent().children(":nth-child(2)").css({"text-decoration": "line-through",
-					"color": "grey",
-				});
-			}
-			else {
-				$(this).parent().parent().children(":nth-child(2)").css({"text-decoration": "none",
-					"color": "black",
-				});
+	$(".checkbox").change(function() {
+		const taskId = $(this).data('id');
+		const isChecked = $(this).prop('checked');
+			
+		if (isChecked) {
+			$(this).parent().parent().children(":nth-child(2)").css({"text-decoration": "line-through",
+				"color": "grey",
+			});
+		}
+		else {
+			$(this).parent().parent().children(":nth-child(2)").css({"text-decoration": "none",
+				"color": "black",
+			});
+		}
+
+		localStorage.setItem('checkbox_' + taskId, isChecked);
+				
+		$.ajax({
+			url:'',
+			type: 'POST',
+			data: {
+				action: 'update_status',
+				id: taskId,
+				stav: isChecked ? 1 : 0
+			},
+			success: function(response) {
+
+				const checkbox = $(this).closest('.task-id').find('checkbox');
+				if (isChecked){
+					checkbox.closest('.task-box').addClass('completed');		
+				}
+				else{
+					checkbox.closest('.task-box').removeClass('completed');
+				}
+			},
+			error: function(xhr, status, error) {
+				console.error("Nastala chyba: " + error);
 			}
 		});
+	});	
+	
+	$(document).ready(function() {
+		$(".checkbox").each(function() {
+		const taskId = $(this).data('id');
+		const savedState = localStorage.getItem('checkbox_' + taskId);
 
+		if (savedState === 'true'){
+			$(this).prop('checked', true);
+			$(this).parent().parent().children(":nth-child(2)").css({
+				"text-decoration": "line-through",
+				"color": "grey"
+			});
+		}
+		else{
+			$(this).prop('checked', false);
+			$(this).parent().parent().children(":nth-child(2)").css({
+				"text-decoration": "none",
+				"color": "black"
+			});
+		}
+	});
+	});
+		
 		$(".delete-btn").click(function(event) {
 			let confirmation = confirm("Určitě chcete úkol smazat?");
 
