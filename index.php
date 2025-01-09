@@ -17,24 +17,24 @@ if(array_key_exists("add", $_POST)){
 	$dulezitost = $_POST["dulezitost"];
 	$stav = $_POST["stav"];
 
-	$dotaz = $db->prepare("INSERT INTO ukoly SET ukol = ?, termin = ?, kategorie = ?, důležitost = ?, stav = false");
-	$dotaz->execute([$ukol, $termin, $kategorie, $dulezitost]);
+	$dotaz = $db->prepare("INSERT INTO ukoly SET ukol = ?, termin = ?, kategorie = ?, důležitost = ?, stav = ?");
+	$dotaz->execute([$ukol, $termin, $kategorie, $dulezitost, $stav]);
 	$idUkolu = $db->lastInsertId();		
 
 	header("Location: " . $_SERVER['PHP_SELF']);
 	exit();
 }
 
-if(isset($_POST['action']) && $_POST['action'] === 'update_status'){	
-	
-	var_dump($_POST);
-		exit();
-
-	$stav = isset($_POST['stav']) ? $_POST['stav'] : 0;
-	$taskId = $_POST['id'];
+if (isset($_POST['action']) && $_POST['action'] == 'update_status'){
+	$idUkolu = $_POST['id'];
+	$stav = $_POST['stav'];
 
 	$dotaz = $db->prepare("UPDATE ukoly SET stav = ? WHERE id = ?");
-	$dotaz->execute([$stav, $taskId]);	
+	$dotaz->execute([$stav, $idUkolu]);
+
+	echo "Stav úkolu byl aktualizovaný";
+	exit();
+
 }
 
 if (isset($_POST['delete'])){
@@ -87,7 +87,7 @@ if (isset($_POST['delete'])){
 				<option value="2" class="important">2</option>
 				<option value="3" class="less-important">3</option>
 			</select>
-			<input type="hidden" name="stav" value="0"></input>
+			<input type="hidden" name="stav" value="null"></input>
 
 			<label for="term">Termín:</label>
 			<input type="date" name="date">
@@ -97,7 +97,7 @@ if (isset($_POST['delete'])){
 		<section class="today-items">		
 		<h1>Dnešní úkoly:</h1>	
 			<?php 
-				$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly WHERE termin = CURRENT_DATE()");
+				$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly WHERE termin = CURRENT_DATE() ORDER BY stav");
 				$dotaz->execute();
 				$seznamDnesnichUkolu = $dotaz->fetchAll();
 
@@ -118,7 +118,7 @@ if (isset($_POST['delete'])){
 		<section class="after-term">
 		<h1>Úkoly po termínu:</h1>		
 				<?php
-					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly WHERE termin < CURRENT_DATE() ORDER BY důležitost");
+					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly WHERE termin < CURRENT_DATE() AND stav = 0 ORDER BY termin");
 					$dotaz->execute();
 					$seznamUkoluPoTerminu = $dotaz->fetchAll();
 
@@ -137,11 +137,11 @@ if (isset($_POST['delete'])){
 		</section>
 
 		
-		<section clas="dalsi-ukoly">
+		<section class="dalsi-ukoly">
 			<h1>Další úkoly:</h1>
 			<div class="items">	
 				<?php
-					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly  WHERE termin > CURRENT_DATE() ORDER BY termin");
+					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly  WHERE termin > CURRENT_DATE() AND stav = 0 ORDER BY termin");
 					$dotaz->execute();
 					$seznamVsechUkolu = $dotaz->fetchAll();
 
@@ -151,22 +151,22 @@ if (isset($_POST['delete'])){
 				?>
 			</div>	
 		</section>
-
-		<section class="dokoncene-ukoly">
-			<h1>Dokončeny úkoly:</h1>
-			<div class="items">
-			<?php
-				$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly WHERE stav = true");
-				$dotaz->execute();
-				$seznamDokoncenych = $dotaz->fetchAll();
-
-				foreach($seznamDokoncenych as $polozka){
-					include 'vypsaniUkolu.php';
-				}
-			?>
-			</div>
-		</section>
 	
+		<div class="section">
+			<h1>Tohle máš za sebou</h1>
+			<div class="items">
+				<?php
+					$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly WHERE stav = 1");
+					$dotaz->execute();
+					$seznamHotovychUkolu = $dotaz->fetchAll();
+
+					foreach($seznamHotovychUkolu as $polozka){
+						include 'vypsaniUkolu.php';
+					}
+				?>
+			</div>
+		</div>
+
 	</main>
 </body>
 
@@ -202,22 +202,17 @@ if (isset($_POST['delete'])){
 			},
 			success: function(response) {
 
-				const checkbox = $(this).closest('.task-id').find('checkbox');
-				if (isChecked){
-					checkbox.closest('.task-box').addClass('completed');		
-				}
-				else{
-					checkbox.closest('.task-box').removeClass('completed');
-				}
+				console.log('Stav byl úspěšně aktualizovaný v databáze');
+
 			},
+				
 			error: function(xhr, status, error) {
 				console.error("Nastala chyba: " + error);
 			}
 		});
 	});	
 	
-	$(document).ready(function() {
-		$(".checkbox").each(function() {
+	$(".checkbox").each(function() {
 		const taskId = $(this).data('id');
 		const savedState = localStorage.getItem('checkbox_' + taskId);
 
@@ -227,6 +222,7 @@ if (isset($_POST['delete'])){
 				"text-decoration": "line-through",
 				"color": "grey"
 			});
+			
 		}
 		else{
 			$(this).prop('checked', false);
@@ -236,7 +232,7 @@ if (isset($_POST['delete'])){
 			});
 		}
 	});
-	});
+	
 		
 		$(".delete-btn").click(function(event) {
 			let confirmation = confirm("Určitě chcete úkol smazat?");
@@ -245,6 +241,8 @@ if (isset($_POST['delete'])){
 				event.preventDefault();
 			}
 		});
+
+		
 	
 </script>
 </html>

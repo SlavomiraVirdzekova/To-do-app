@@ -9,7 +9,7 @@
 		</div>
 		<p class="task"><?php echo $polozka['ukol'];?></p>
 		<div class="task-bottom">			
-			<input type="checkbox" class="checkbox" data-id="<?php echo $polozka['id'];?>" <?php echo $polozka['stav'] ? 'checked' : ''; ?>>			
+			<input type="checkbox" class="checkbox" name ="stav" data-id="<?php echo $polozka['id'];?>" <?php echo $polozka['stav'] ? 'checked' : ''; ?>>			
 			<form method="post" class="delete-form">
 				<button type="submit" name="delete" value="<?php echo $polozka['id'];?>" class="delete-btn"> 
 					<i class="fa-solid fa-xmark"></i>
