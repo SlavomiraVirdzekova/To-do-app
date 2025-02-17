@@ -77,10 +77,10 @@ if (isset($_POST['delete'])){
 			<label for="category">Kategórie:</label>
 			<select name="category">
 				<option value="null">Vyberte</option>
-				<option value="prace">Práce</option>
+				<option value="práce">Práce</option>
 				<option value="rodina">Rodina</option>
-				<option value="pratele">Přátelé</option>
-				<option value="soukromi">Soukromí</option>
+				<option value="přátelé">Přátelé</option>
+				<option value="soukromí">Soukromí</option>
 			</select>
 
 			<label for="dulezitost">Důležitost:</label>
