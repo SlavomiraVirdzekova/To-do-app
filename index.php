@@ -97,7 +97,7 @@ if (isset($_POST['delete'])){
 		</form>		
 			
 		<section class="today-items">		
-		<h1>Dnešní úkoly:</h1>	
+		<h1>Dněšní úkoly:</h1>	
 			<?php 
 				$dotaz = $db->prepare("SELECT id, ukol, termin, kategorie, stav FROM ukoly WHERE termin = CURRENT_DATE() ORDER BY stav");
 				$dotaz->execute();
