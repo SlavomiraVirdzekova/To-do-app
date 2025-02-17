@@ -217,10 +217,11 @@ if (isset($_POST['delete'])){
 	$(".checkbox").each(function() {
 		const taskId = $(this).data('id');
 		const savedState = localStorage.getItem('checkbox_' + taskId);
+		const checked = $(this).parent().parent().children(":nth-child(2)");
 
 		if (savedState === 'true'){
 			$(this).prop('checked', true);
-			$(this).parent().parent().children(":nth-child(2)").css({
+			checked.css({
 				"text-decoration": "line-through",
 				"color": "grey"
 			});
@@ -228,7 +229,7 @@ if (isset($_POST['delete'])){
 		}
 		else{
 			$(this).prop('checked', false);
-			$(this).parent().parent().children(":nth-child(2)").css({
+			checked.css({
 				"text-decoration": "none",
 				"color": "black"
 			});
