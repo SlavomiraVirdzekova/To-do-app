@@ -25,6 +25,8 @@ if(array_key_exists("add", $_POST)){
 	exit();
 }
 
+//uložení zmeny stavu checkboxu do db
+
 if (isset($_POST['action']) && $_POST['action'] == 'update_status'){
 	$idUkolu = $_POST['id'];
 	$stav = $_POST['stav'];
@@ -87,7 +89,7 @@ if (isset($_POST['delete'])){
 				<option value="2" class="important">2</option>
 				<option value="3" class="less-important">3</option>
 			</select>
-			<input type="hidden" name="stav" value="null"></input>
+			<input type="hidden" name="stav" value="0"></input>
 
 			<label for="term">Termín:</label>
 			<input type="date" name="date">
